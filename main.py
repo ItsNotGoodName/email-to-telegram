@@ -6,8 +6,7 @@ from constants import MAILBOX_PATH, PICTURE_PATH
 
 def consume_message(message):
     picture_paths = extract_attachements(message)
-    send_photos("CAPTION TEST", picture_paths)
-    pass
+    send_photos("Motion Detected", picture_paths)
 
 def consume_mailbox():
     mbox = mailbox.mbox(MAILBOX_PATH)

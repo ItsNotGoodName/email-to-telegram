@@ -1,6 +1,7 @@
 from telegram.ext import Updater, CommandHandler
 from telegram import InputMediaPhoto
 from constants import CHAT_ID, TOKEN
+import logging
 
 def _start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
@@ -20,7 +21,7 @@ def send_photos(caption, paths):
         media[0].caption = caption
         updater.bot.sendMediaGroup(chat_id=CHAT_ID, media=media)
     else:
-        pass # TODO: Throw an error
+        logging.error(f"paths has length of {str(num_paths)}")
 
 updater = Updater(token=TOKEN, use_context=True)
 dispatcher = updater.dispatcher
