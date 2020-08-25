@@ -30,7 +30,6 @@ def consume_mailbox():
         parsed_message = extract_message(message)
         if len(parsed_message['attachments']) != 0: # Only add messages that have atleast 1 picture
             parsed_messages.append(parsed_message)
-        break
 
     mbox.flush()
     mbox.unlock()
