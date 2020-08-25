@@ -1,0 +1,23 @@
+import mailbox
+from utils import extract_attachements
+from constants import MAILBOX_PATH
+
+def consume_message(message):
+    picture_paths = extract_attachements(message)
+    
+    pass
+
+def consume_mailbox():
+    mbox = mailbox.mbox(MAILBOX_PATH)
+    keys = mbox.keys()
+    for key in keys:
+        message = mbox.pop(key)
+        consume_message(message)
+
+    # mbox.flush()
+
+def main():
+    consume_mailbox()
+
+if __name__ == "__main__":
+    main()
