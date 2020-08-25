@@ -1,7 +1,7 @@
 import pyinotify
 from constants import MAILBOX_PATH, MAILBOX_FOLDER, MAILBOX_NAME
 from time import sleep, time
-from main import consume_mailbox
+from main import consume_mailbox, init
 import logging
 
 class OnWriteHandler(pyinotify.ProcessEvent):
@@ -9,14 +9,14 @@ class OnWriteHandler(pyinotify.ProcessEvent):
         self.modifications = 0
 
     def process_IN_DELETE(self, event):
-        logging.debug("IN DELETE")
-        if(event.name == f"{MAILBOX_NAME}.lock" and self.modifications == 0):
+        if(event.name == f"{MAILBOX_NAME}.lock" and self.modifications <= 0):
             consume_mailbox()
             logging.debug("CONSUMED")
-            self.modifications += 3
+            self.modifications = 3
         self.modifications -= 1
 
 def main():
+    init()
     wm = pyinotify.WatchManager()
     wm.add_watch(MAILBOX_FOLDER, pyinotify.ALL_EVENTS)
     notifier = pyinotify.Notifier(wm, OnWriteHandler())

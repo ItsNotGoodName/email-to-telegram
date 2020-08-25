@@ -26,18 +26,16 @@ def consume_mailbox():
         pass
     except mailbox.ExternalClashError:
         logging.error("Mailbox not consumed, it is being access by another program")
-        return
+    else:
+        keys = mbox.keys()
+        for key in keys:
+            message = mbox.pop(key)
+            parsed_messages.append(extract_message(message))
 
-    keys = mbox.keys()
-    for key in keys:
-        logging.debug(f"{str(len(parsed_messages))} new messages")
-        message = mbox.pop(key)
-        parsed_messages.append(extract_message(message))
+        mbox.flush()
+        mbox.unlock()
 
-    mbox.flush()
-    mbox.unlock()
-
-    dispatch_telegram(parsed_messages)
+        dispatch_telegram(parsed_messages)
 
 def init():
     if not os.path.exists(PICTURE_PATH):
