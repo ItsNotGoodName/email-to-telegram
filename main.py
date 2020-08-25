@@ -1,10 +1,10 @@
 import mailbox
+import os
 from utils import extract_attachements
-from constants import MAILBOX_PATH
+from constants import MAILBOX_PATH, PICTURE_PATH
 
 def consume_message(message):
     picture_paths = extract_attachements(message)
-    
     pass
 
 def consume_mailbox():
@@ -16,7 +16,12 @@ def consume_mailbox():
 
     # mbox.flush()
 
+def init():
+    if not os.path.exists(PICTURE_PATH):
+        os.makedirs(PICTURE_PATH)
+
 def main():
+    init()
     consume_mailbox()
 
 if __name__ == "__main__":
