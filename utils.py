@@ -1,5 +1,11 @@
 import os
 from constants import PICTURE_PATH
+from email.header import decode_header
+import logging
+
+def decode_email_subject(subject):
+    s = (decode_header(subject)[0][0])
+    return str(s, 'utf-8')
 
 def extract_attachements(message):
     attachments = []

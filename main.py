@@ -1,15 +1,15 @@
 import mailbox
 import os
 from tgram import send_photos,send_message
-from utils import extract_attachements
+from utils import extract_attachements, decode_email_subject
 from constants import MAILBOX_PATH, PICTURE_PATH
 import logging
  
 def extract_message(message):
     picture_paths = extract_attachements(message)
     if len(picture_paths) == 0: # It is a normal message
-        return {"subject": message["subject"], "type": "message"}
-    return {"subject": message["subject"], "attachments": picture_paths, "type": "picture"}
+        return {"subject": decode_email_subject(message["subject"]), "type": "message"}
+    return {"subject": decode_email_subject(message["subject"]), "attachments": picture_paths, "type": "picture"}
 
 def dispatch_telegram(parsed_messages):
     for p in parsed_messages:
