@@ -3,7 +3,7 @@ Install postfix and cyrus sasl
 sudo pacman -S cyrus-sasl posftix
 ```
 
-Add following to main.cf
+Add following to `/etc/postfix/main.cf`
 ```
 myorigin = localhost.com
 mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain, localhost.com
