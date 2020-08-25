@@ -6,33 +6,15 @@ import logging
 
 class OnWriteHandler(pyinotify.ProcessEvent):
     def my_init(self):
-        self.i_modified = False
-
-    def process_IN_ACCESS(self, event):
-        pass
-
-    def process_IN_ATTRIB(self, event):
-        pass
-
-    def process_IN_CLOSE_NOWRITE(self, event):
-        pass
-
-    def process_IN_CLOSE_WRITE(self, event):
-        pass
-
-    def process_IN_CREATE(self, event):
-        pass
+        self.modifications = 0
 
     def process_IN_DELETE(self, event):
-        if(event.name == f"{MAILBOX_NAME}.lock" and not self.i_modified):
+        logging.debug("IN DELETE")
+        if(event.name == f"{MAILBOX_NAME}.lock" and self.modifications == 0):
             consume_mailbox()
-            self.i_modified = True
-
-    def process_IN_MODIFY(self, event):
-        pass
-
-    def process_IN_OPEN(self, event):
-        pass
+            logging.debug("CONSUMED")
+            self.modifications += 3
+        self.modifications -= 1
 
 def main():
     wm = pyinotify.WatchManager()

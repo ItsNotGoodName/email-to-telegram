@@ -1,17 +1,22 @@
 import mailbox
 import os
-from tgram import send_photos
+from tgram import send_photos,send_message
 from utils import extract_attachements
 from constants import MAILBOX_PATH, PICTURE_PATH
 import logging
  
 def extract_message(message):
     picture_paths = extract_attachements(message)
-    return {"subject": message["subject"], "attachments": picture_paths}
+    if len(picture_paths) == 0: # It is a normal message
+        return {"subject": message["subject"], "type": "message"}
+    return {"subject": message["subject"], "attachments": picture_paths, "type": "picture"}
 
 def dispatch_telegram(parsed_messages):
     for p in parsed_messages:
-        send_photos(p['subject'], p['attachments'])
+        if(p["type"] == "picture"):
+            send_photos(p['subject'], p['attachments'])
+        else:
+            send_message(p["subject"])
 
 def consume_mailbox():
     mbox = mailbox.mbox(MAILBOX_PATH)
@@ -27,9 +32,7 @@ def consume_mailbox():
     for key in keys:
         logging.debug(f"{str(len(parsed_messages))} new messages")
         message = mbox.pop(key)
-        parsed_message = extract_message(message)
-        if len(parsed_message['attachments']) != 0: # Only add messages that have atleast 1 picture
-            parsed_messages.append(parsed_message)
+        parsed_messages.append(extract_message(message))
 
     mbox.flush()
     mbox.unlock()
