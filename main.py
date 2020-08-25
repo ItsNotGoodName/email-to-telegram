@@ -1,10 +1,12 @@
 import mailbox
 import os
+from tgram import send_photos
 from utils import extract_attachements
 from constants import MAILBOX_PATH, PICTURE_PATH
 
 def consume_message(message):
     picture_paths = extract_attachements(message)
+    send_photos("CAPTION TEST", picture_paths)
     pass
 
 def consume_mailbox():
