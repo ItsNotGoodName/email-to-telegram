@@ -1,16 +1,17 @@
 from telegram.ext import Updater, CommandHandler
 from telegram import InputMediaPhoto
-import telegram
-from constants import CHAT_ID, TOKEN
 import logging
+
+from constants import CHAT_ID, TOKEN
 
 updater = Updater(token=TOKEN, use_context=True)
 
 def send_message(message):
     try:
         updater.bot.sendMessage(chat_id=CHAT_ID, text=message)
-    except telegram.error.RetryAfter:
+    except Exception:
         logging.error("Too Much Spam")
+        
 
 def send_photos(caption, paths):
     try:
@@ -26,5 +27,5 @@ def send_photos(caption, paths):
             updater.bot.sendMediaGroup(chat_id=CHAT_ID, media=media)
         else:
             logging.error(f"paths length is too small or too big, length {str(num_paths)}")
-    except telegram.error.RetryAfter:
+    except Exception:
         logging.error("Too Much Spam")
