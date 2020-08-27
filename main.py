@@ -3,7 +3,7 @@ import os
 import logging
 import pyinotify
 
-from constants import MAILBOX_PATH, PICTURE_PATH, MAILBOX_FOLDER
+from constants import MAILBOX_PATH, PICTURE_PATH, MAILBOX_FOLDER, ENV
 from mailaccess import MAILACCESS
 
 def main():
@@ -23,6 +23,8 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
+    if ENV != "production":
+        logging.basicConfig(level=logging.DEBUG)
+
     logging.debug("Started")
     main()
