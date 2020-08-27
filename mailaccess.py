@@ -12,14 +12,14 @@ class _OnChangeHandler(pyinotify.ProcessEvent):
         self.mailbox_name = kargs["mailbox_name"]
 
     def process_IN_DELETE(self, event):
-        logging.debug("IN_DELETE Executed")
-        print(self.parent.modifications)
-        if(event.name == f"{self.mailbox_name}.lock" and self.parent.modifications == 0):
-            logging.debug("Starting mailbox consumption")
-            self.callback(self.parent)
-            logging.debug("Mailbox consumption finished")
-        if self.parent.modifications > 0:
-            self.parent.modifications -= 1
+        logging.debug(f"IN_DELETE Executed Event: {event}")
+        if event.name == f"{self.mailbox_name}.lock":
+            if self.parent.modifications == 0:
+                logging.debug("Starting mailbox consumption")
+                self.callback(self.parent)
+                logging.debug("Mailbox consumption finished")
+            if self.parent.modifications > 0:
+                self.parent.modifications -= 1
 
 class _MailAccess():
     def __init__(self, mailbox_name, mailbox_path, callback):
