@@ -12,6 +12,7 @@ class _telegram_bot():
 
     def send_message(self, message):
         if(time() - self.last_message_time < SECONDS_BETWEEN_MESSAGES):
+            logging.debug(f"Sleeping for {SECONDS_BETWEEN_MESSAGES}")
             sleep(SECONDS_BETWEEN_MESSAGES)
 
         try:
@@ -24,6 +25,7 @@ class _telegram_bot():
 
     def send_photos(self, caption, paths):
         if(time() - self.last_message_time < SECONDS_BETWEEN_MESSAGES):
+            logging.debug(f"Sleeping for {SECONDS_BETWEEN_MESSAGES}")
             sleep(SECONDS_BETWEEN_MESSAGES)
 
         try:
