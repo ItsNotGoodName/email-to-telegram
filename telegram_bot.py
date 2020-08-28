@@ -23,7 +23,7 @@ class TelegramBot():
 
         try:
             self.updater.bot.sendMessage(chat_id=self.chat_id, text=message, disable_notification=disable_notification)
-        except Exception:
+        except Exception: # TODO: Be specific on on exceptions
             logging.error("Too Much Spam")
 
         self.last_message_time = time()
@@ -47,7 +47,7 @@ class TelegramBot():
                 self.updater.bot.sendMediaGroup(chat_id=self.chat_id, media=media)
             else:
                 logging.error(f"paths length is too small or too big, length {str(num_paths)}")
-        except Exception:
+        except Exception: # TODO: Be specific on on exceptions
             logging.error("Too Much Spam")
 
         self.last_message_sent = time()
