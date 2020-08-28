@@ -2,7 +2,6 @@ import os
 from email.header import decode_header
 import logging
 
-from telegram_bindings import telegram_bot
 from constants import PICTURE_PATH
 
 def decode_email_subject(subject):
@@ -14,13 +13,6 @@ def extract_message(message):
     if len(picture_paths) == 0: # It is a normal message
         return {"subject": decode_email_subject(message["subject"]), "type": "message"}
     return {"subject": decode_email_subject(message["subject"]), "attachments": picture_paths, "type": "picture"}
-
-def dispatch_telegram(parsed_messages):
-    for p in parsed_messages:
-        if(p["type"] == "picture"):
-            telegram_bot.send_photos(p['subject'], p['attachments'])
-        else:
-            telegram_bot.send_message(p["subject"], disable_notification=True)
 
 def extract_attachements(message):
     attachments = []
