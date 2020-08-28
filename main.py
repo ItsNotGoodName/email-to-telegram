@@ -21,19 +21,10 @@ def main():
     if not os.path.exists(PICTURE_PATH):
         os.makedirs(PICTURE_PATH)
 
-    mail_access.set_callback(consume_mailbox)
-    # Invoke check on startup
-    mail_access.invoke_callback()
-    mail_access.modifications = 0
-
-    # Setup watchers on the root folder where the mail file is stored
-    wm = pyinotify.WatchManager()
-    wm.add_watch(MAILBOX_FOLDER, pyinotify.ALL_EVENTS)
-    notifier = pyinotify.Notifier(wm, mail_access.on_change_handler)
+    mail_access.set_callback(consume_mailbox, andExecute=True)
 
     logging.debug(f"Watching {MAILBOX_PATH}")
-    notifier.loop()
-
+    mail_access.notifier.loop()
 
 if __name__ == "__main__":
     if ENV != "production":

@@ -10,7 +10,7 @@ class _OnChangeHandler(pyinotify.ProcessEvent):
         self.mailbox_name = kargs["mailbox_name"]
 
     def process_IN_DELETE(self, event):
-        logging.debug(f"IN_DELETE Executed Event: {event}")
+        logging.debug(f"IN_DELETE Executed Event: {event} with modifications={self.parent.modifications}")
         if event.name == f"{self.mailbox_name}.lock":
             if self.parent.modifications == 0:
                 logging.debug("Starting mailbox consumption")
@@ -20,7 +20,7 @@ class _OnChangeHandler(pyinotify.ProcessEvent):
                 self.parent.modifications -= 1
 
 class MailAccess():
-    def __init__(self, mailbox_name, mailbox_path, attachment_folder, callback=None):
+    def __init__(self, mailbox_name, mailbox_folder, mailbox_path,attachment_folder, callback=None):
         self.mailbox_name = mailbox_name
         self.mailbox_path = mailbox_path
         self.attachment_folder = attachment_folder
@@ -29,8 +29,16 @@ class MailAccess():
         self.modifications = 0
         self.on_change_handler = _OnChangeHandler(parent=self, mailbox_name=mailbox_name)
 
-    def set_callback(self, callback):
+        # Setup watchers on the root folder where the mail file is stored
+        wm = pyinotify.WatchManager()
+        wm.add_watch(mailbox_folder, pyinotify.ALL_EVENTS)
+        self.notifier = pyinotify.Notifier(wm, self.on_change_handler)
+
+    def set_callback(self, callback, andExecute=False):
         self._callback = callback
+        if andExecute:
+            self.invoke_callback()
+            self.modifications = 0
 
     def invoke_callback(self):
         if(self._callback==None):
@@ -53,7 +61,7 @@ class MailAccess():
 
             mbox.flush()
             mbox.unlock()
-            self.modifications += 3
+            self.modifications += 2
         finally:
             return parsed_emails
 
@@ -67,4 +75,4 @@ class MailAccess():
             mbox.clear()
             mbox.flush()
             mbox.unlock()
-            self.modifications += 3 
+            self.modifications += 2
