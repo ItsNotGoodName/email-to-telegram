@@ -11,10 +11,11 @@ def consume_mailbox(mail_access):
 
 def dispatch_telegram(parsed_emails):
     for p in parsed_emails:
+        message = "Subject: " + p['subject'] + '\n' + p['body']
         if(p["type"] == "picture"):
-            telegram_bot.send_photos(p['subject'], p['attachments'])
+            telegram_bot.send_photos(message, p['attachments'])
         else:
-            telegram_bot.send_message(p["subject"], disable_notification=True)
+            telegram_bot.send_message(message, disable_notification=True)
 
 def main():
     if not os.path.exists(PICTURE_PATH):
