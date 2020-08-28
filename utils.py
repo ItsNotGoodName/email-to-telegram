@@ -20,7 +20,7 @@ def dispatch_telegram(parsed_messages):
         if(p["type"] == "picture"):
             telegram_bot.send_photos(p['subject'], p['attachments'])
         else:
-            telegram_bot.send_message(p["subject"])
+            telegram_bot.send_message(p["subject"], disable_notification=True)
 
 def extract_attachements(message):
     attachments = []

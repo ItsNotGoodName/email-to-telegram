@@ -14,15 +14,15 @@ class _telegram_bot():
         self.updater.dispatcher.add_handler(CommandHandler("ping", self._ping))
 
     def _ping(self, update, context):
-       update.message.reply_text('pong') 
+       update.message.reply_text('pong', disable_notification=True) 
 
-    def send_message(self, message):
+    def send_message(self, message, disable_notification=False):
         if(time() - self.last_message_time < SECONDS_BETWEEN_MESSAGES):
             logging.debug(f"Sleeping for {SECONDS_BETWEEN_MESSAGES}")
             sleep(SECONDS_BETWEEN_MESSAGES)
 
         try:
-            self.updater.bot.sendMessage(chat_id=CHAT_ID, text=message)
+            self.updater.bot.sendMessage(chat_id=CHAT_ID, text=message, disable_notification=disable_notification)
         except Exception:
             logging.error("Too Much Spam")
 
