@@ -1,6 +1,5 @@
 from telegram.ext import Updater, CommandHandler
 from telegram import InputMediaPhoto
-import threading  
 import logging
 from time import time, sleep
 

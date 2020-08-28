@@ -1,7 +1,6 @@
 import mailbox
 import os
 import logging
-import pyinotify
 
 from constants import MAILBOX_PATH, PICTURE_PATH, MAILBOX_FOLDER, ENV
 from instance import mail_access, telegram_bot
