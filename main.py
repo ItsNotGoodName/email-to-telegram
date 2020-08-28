@@ -7,11 +7,11 @@ from constants import MAILBOX_PATH, PICTURE_PATH, MAILBOX_FOLDER, ENV
 from instance import mail_access, telegram_bot
 
 def consume_mailbox(mail_access):
-    parsed_messages = mail_access.mailbox_parse_messages()
-    dispatch_telegram(parsed_messages)
+    parsed_emails = mail_access.parse_emails()
+    dispatch_telegram(parsed_emails)
 
-def dispatch_telegram(parsed_messages):
-    for p in parsed_messages:
+def dispatch_telegram(parsed_emails):
+    for p in parsed_emails:
         if(p["type"] == "picture"):
             telegram_bot.send_photos(p['subject'], p['attachments'])
         else:

@@ -2,7 +2,7 @@ import pyinotify
 import logging
 import mailbox
 
-from utils import extract_message
+from utils import extract_email
 
 class _OnChangeHandler(pyinotify.ProcessEvent):
     def my_init(self,**kargs):
@@ -20,11 +20,13 @@ class _OnChangeHandler(pyinotify.ProcessEvent):
                 self.parent.modifications -= 1
 
 class MailAccess():
-    def __init__(self, mailbox_name, mailbox_path, callback=None):
+    def __init__(self, mailbox_name, mailbox_path, attachment_folder, callback=None):
         self.mailbox_name = mailbox_name
         self.mailbox_path = mailbox_path
-        self.modifications = 0
+        self.attachment_folder = attachment_folder
         self._callback = callback
+
+        self.modifications = 0
         self.on_change_handler = _OnChangeHandler(parent=self, mailbox_name=mailbox_name)
 
     def set_callback(self, callback):
@@ -36,9 +38,9 @@ class MailAccess():
             return
         self._callback(self)
 
-    def mailbox_parse_messages(self):
+    def parse_emails(self):
         mbox = mailbox.mbox(self.mailbox_path)
-        parsed_messages = [] 
+        parsed_emails = [] 
         try:
             mbox.lock()
         except mailbox.ExternalClashError:
@@ -46,16 +48,16 @@ class MailAccess():
         else:
             keys = mbox.keys()
             for key in keys:
-                message = mbox.pop(key)
-                parsed_messages.append(extract_message(message))
+                email = mbox.pop(key)
+                parsed_emails.append(extract_email(email, self.attachment_folder))
 
             mbox.flush()
             mbox.unlock()
             self.modifications += 3
         finally:
-            return parsed_messages
+            return parsed_emails
 
-    def mailbox_clear_messages(self):
+    def clear_emails(self):
         mbox = mailbox.mbox(self.mailbox_path)
         try:
             mbox.lock()
