@@ -10,6 +10,11 @@ class _telegram_bot():
     def __init__(self):
         self.last_message_time = 0
         self.updater = Updater(token=TOKEN, use_context=True)
+        self.updater.start_polling()
+        self.updater.dispatcher.add_handler(CommandHandler("ping", self._ping))
+
+    def _ping(self, update, context):
+       update.message.reply_text('pong') 
 
     def send_message(self, message):
         if(time() - self.last_message_time < SECONDS_BETWEEN_MESSAGES):
@@ -48,11 +53,3 @@ class _telegram_bot():
         self.last_message_sent = time()
 
 telegram_bot = _telegram_bot()
-
-telegram_bot.updater.start_polling()
-
-def ping(update, context):
-   """Send a message when the command /start is issued."""
-   update.message.reply_text('pong') 
-  
-telegram_bot.updater.dispatcher.add_handler(CommandHandler("ping", ping))
