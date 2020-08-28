@@ -1,5 +1,6 @@
 from telegram.ext import Updater, CommandHandler
 from telegram import InputMediaPhoto
+import threading  
 import logging
 from time import time, sleep
 
@@ -47,3 +48,11 @@ class _telegram_bot():
         self.last_message_sent = time()
 
 telegram_bot = _telegram_bot()
+
+telegram_bot.updater.start_polling()
+
+def ping(update, context):
+   """Send a message when the command /start is issued."""
+   update.message.reply_text('pong') 
+  
+telegram_bot.updater.dispatcher.add_handler(CommandHandler("ping", ping))
