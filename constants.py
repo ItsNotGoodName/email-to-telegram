@@ -23,7 +23,6 @@ def load_config(file_name):
     for section in config.sections():
         chat_id = config[section]["chat_id"]
         from_address = config[section]["from_address"]
-        to_address = config[section]["to_address"]
-        TRANSFERS.append({"chat_id": chat_id, "from_address": from_address,"to_address": to_address})
+        TRANSFERS.append({"chat_id": chat_id, "from_address": from_address})
 
 load_config('config.ini')

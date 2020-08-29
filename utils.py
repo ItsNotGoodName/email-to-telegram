@@ -8,9 +8,19 @@ def decode_email_subject(subject):
 
 def extract_email(email, output_folder):
     picture_paths = extract_attachements(email, output_folder)
+    e = {
+        "subject"   : decode_email_subject(email['subject']), 
+        "from"      : email['From'][1:-1],
+        "body"      : extract_body(email),"type": "message"
+        }
+
     if len(picture_paths) == 0: # It is a normal message
-        return {"subject": decode_email_subject(email["subject"]), "body": extract_body(email),"type": "message"}
-    return {"subject": decode_email_subject(email["subject"]), "body": extract_body(email), "attachments": picture_paths, "type": "picture"}
+        e['type'] = 'message'
+        return e
+
+    e['type'] = 'picture' 
+    e['attachments'] = picture_paths
+    return e
 
 def extract_attachements(email, output_folder):
     attachments = []

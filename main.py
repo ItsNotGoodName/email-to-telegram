@@ -2,7 +2,7 @@ import mailbox
 import os
 import logging
 
-from constants import MAILBOX_PATH, PICTURE_PATH, MAILBOX_FOLDER, ENV
+from constants import MAIL_PATH, ATTACHMENTS_FOLDER, MAIL_FOLDER, ENV, TRANSFERS
 from instance import mail_access, telegram_bot
 
 def consume_mailbox(mail_access):
@@ -10,20 +10,22 @@ def consume_mailbox(mail_access):
     dispatch_telegram(parsed_emails)
 
 def dispatch_telegram(parsed_emails):
-    for p in parsed_emails:
-        message = "Subject: " + p['subject'] + '\n' + p['body']
-        if(p["type"] == "picture"):
-            telegram_bot.send_photos(message, p['attachments'])
-        else:
-            telegram_bot.send_message(message, disable_notification=True)
+    for email in parsed_emails:
+        for transfer in TRANSFERS: # TODO: Implement better matching
+            if email['from'] == transfer['from_address']:
+                message = "Subject: " + email['subject'] + '\n' + 'From: ' + email['from'] + '\n' + email['body']
+                if(email["type"] == "picture"):
+                    telegram_bot.send_photos(message, email['attachments'], transfer['chat_id'])
+                else:
+                    telegram_bot.send_message(message, transfer['chat_id'], disable_notification=True)
 
 def main():
-    if not os.path.exists(PICTURE_PATH):
-        os.makedirs(PICTURE_PATH)
+    if not os.path.exists(ATTACHMENTS_FOLDER):
+        os.makedirs(ATTACHMENTS_FOLDER)
 
     mail_access.set_callback(consume_mailbox, andExecute=True)
 
-    logging.debug(f"Watching {MAILBOX_PATH}")
+    logging.debug(f"Watching {MAIL_PATH}")
     mail_access.notifier.loop()
 
 if __name__ == "__main__":

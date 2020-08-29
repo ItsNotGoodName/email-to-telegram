@@ -20,18 +20,18 @@ class _OnChangeHandler(pyinotify.ProcessEvent):
                 self.parent.modifications -= 1
 
 class MailAccess():
-    def __init__(self, mailbox_name, mailbox_folder, mailbox_path,attachment_folder, callback=None):
-        self.mailbox_name = mailbox_name
-        self.mailbox_path = mailbox_path
-        self.attachment_folder = attachment_folder
+    def __init__(self, mail_folder, mail_file, mail_path, attachments_folder, callback=None):
+        self.mail_file = mail_file
+        self.mail_path = mail_path
+        self.attachments_folder = attachments_folder
         self._callback = callback
 
         self.modifications = 0
-        self.on_change_handler = _OnChangeHandler(parent=self, mailbox_name=mailbox_name)
+        self.on_change_handler = _OnChangeHandler(parent=self, mailbox_name=mail_file)
 
         # Setup watchers on the root folder where the mail file is stored
         wm = pyinotify.WatchManager()
-        wm.add_watch(mailbox_folder, pyinotify.ALL_EVENTS)
+        wm.add_watch(mail_folder, pyinotify.ALL_EVENTS)
         self.notifier = pyinotify.Notifier(wm, self.on_change_handler)
 
     def set_callback(self, callback, andExecute=False):
@@ -47,7 +47,7 @@ class MailAccess():
         self._callback(self)
 
     def parse_emails(self):
-        mbox = mailbox.mbox(self.mailbox_path)
+        mbox = mailbox.mbox(self.mail_path)
         parsed_emails = [] 
         try:
             mbox.lock()
@@ -57,7 +57,7 @@ class MailAccess():
             keys = mbox.keys()
             for key in keys:
                 email = mbox.pop(key)
-                parsed_emails.append(extract_email(email, self.attachment_folder))
+                parsed_emails.append(extract_email(email, self.attachments_folder))
 
             mbox.flush()
             mbox.unlock()
@@ -66,7 +66,7 @@ class MailAccess():
             return parsed_emails
 
     def clear_emails(self):
-        mbox = mailbox.mbox(self.mailbox_path)
+        mbox = mailbox.mbox(self.mail_path)
         try:
             mbox.lock()
         except mailbox.ExternalClashError:
