@@ -11,3 +11,17 @@ pip3 install --user -r requirements.txt
 Copy `config.def.ini` to `config.ini` and edit it.
 
 You can get the channel's `chat_id` from the web version of telegram.
+
+# Example service file
+```
+[Unit]
+Description=Starts email to telegram bot
+
+[Service]
+User=telegrambot
+WorkingDirectory=/path/to/directory
+ExecStart=/usr/bin/python3 /path/to/directory/main.py
+
+[Install]
+WantedBy=multi-user.target
+```
