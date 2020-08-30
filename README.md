@@ -2,6 +2,11 @@
 
 Telegram bot that reads a mailbox file and forwards it to a Telegram channel. It can handle png and jpeg attachments. 
 
+# Installation
+```
+pip3 install --user -r requirements.txt
+```
+
 # Configuration
 Copy `config.def.ini` to `config.ini` and edit it.
 
