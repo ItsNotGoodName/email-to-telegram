@@ -27,6 +27,7 @@ def main():
 
     logging.debug(f"Watching {MAIL_PATH}")
     mail_access.notifier.loop()
+    telegram_bot.updater.stop()
 
 if __name__ == "__main__":
     if ENV != "production":
