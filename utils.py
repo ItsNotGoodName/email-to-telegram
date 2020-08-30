@@ -12,7 +12,7 @@ def extract_email(email, output_folder):
     picture_paths = extract_attachements(email, output_folder)
     e = {
         "subject"   : decode_email_subject(email['subject']), 
-        "from"      : email['From'][1:-1],
+        "from"      : email['From'].replace('<', '').replace('>', ''),
         "body"      : extract_body(email),"type": "message"
         }
 
