@@ -3,8 +3,10 @@ from email.header import decode_header
 import logging
 
 def decode_email_subject(subject):
-    s = (decode_header(subject)[0][0])
-    return str(s, 'utf-8')
+    try:
+        return str((decode_header(subject)[0][0]), 'utf-8')
+    except Exception:
+        return subject
 
 def extract_email(email, output_folder):
     picture_paths = extract_attachements(email, output_folder)

@@ -53,17 +53,17 @@ class MailAccess():
             mbox.lock()
         except mailbox.ExternalClashError:
             logging.error("Mailbox not consumed, it is being access by another program")
-        else:
-            keys = mbox.keys()
-            for key in keys:
-                email = mbox.pop(key)
-                parsed_emails.append(extract_email(email, self.attachments_folder))
-
-            mbox.flush()
-            mbox.unlock()
-            self.modifications += 2
-        finally:
             return parsed_emails
+
+        keys = mbox.keys()
+        for key in keys:
+            email = mbox.pop(key)
+            parsed_emails.append(extract_email(email, self.attachments_folder))
+
+        mbox.flush()
+        mbox.unlock()
+        self.modifications += 2
+        return parsed_emails
 
     def clear_emails(self):
         mbox = mailbox.mbox(self.mail_path)
