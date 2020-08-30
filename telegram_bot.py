@@ -4,9 +4,9 @@ import logging
 from time import time, sleep
 
 class TelegramBot():
-    def __init__(self, token, seconds_between_messages):
+    def __init__(self, token, message_timeout):
         self.last_message_time = 0
-        self.seconds_between_messages = seconds_between_messages
+        self.message_timeout = message_timeout
         self.updater = Updater(token=token, use_context=True)
         self.updater.dispatcher.add_handler(CommandHandler("ping", self._ping))
         self.updater.start_polling()
@@ -15,9 +15,9 @@ class TelegramBot():
        update.message.reply_text('pong', disable_notification=True) 
 
     def send_message(self, message, chat_id, disable_notification=False):
-        if(time() - self.last_message_time < self.seconds_between_messages):
-            logging.debug(f"Sleeping for {self.seconds_between_messages}")
-            sleep(self.seconds_between_messages)
+        if(time() - self.last_message_time < self.message_timeout):
+            logging.debug(f"Sleeping for {self.message_timeout}")
+            sleep(self.message_timeout)
 
         try:
             self.updater.bot.sendMessage(chat_id=chat_id, text=message, disable_notification=disable_notification)
@@ -28,9 +28,9 @@ class TelegramBot():
 
 
     def send_photos(self, caption, paths, chat_id):
-        if(time() - self.last_message_time < self.seconds_between_messages):
-            logging.debug(f"Sleeping for {self.seconds_between_messages}")
-            sleep(self.seconds_between_messages)
+        if(time() - self.last_message_time < self.message_timeout):
+            logging.debug(f"Sleeping for {self.message_timeout}")
+            sleep(self.message_timeout)
 
         try:
             num_paths = len(paths)
