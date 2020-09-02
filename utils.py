@@ -47,11 +47,12 @@ def extract_body(email):
             cdispo = str(part.get('Content-Disposition'))
 
             # skip any text/plain (txt) attachments
-            if ctype == 'text/plain' and 'attachment' not in cdispo:
+            if (ctype == 'text/plain' or ctype == 'text/html') and 'attachment' not in cdispo:
                 return str(part.get_payload(decode=True), 'utf-8')  # decode
     # not multipart - i.e. plain text, no attachments, keeping fingers crossed
     else:
         return str(email.get_payload(decode=True), 'utf-8')
+    return ""
 
 def cleanup_attachments():
     pass
