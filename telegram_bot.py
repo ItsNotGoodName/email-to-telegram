@@ -20,7 +20,7 @@ class TelegramBot():
             sleep(self.message_timeout)
 
         try:
-            self.updater.bot.sendMessage(chat_id=chat_id, text=message, disable_notification=disable_notification)
+            self.updater.bot.sendMessage(chat_id=chat_id, text=message, disable_notification=disable_notification, parse_mode="html")
         except Exception as e: # TODO: Be specific on on exceptions
             logging.error(e)
 
@@ -35,13 +35,14 @@ class TelegramBot():
         try:
             num_paths = len(paths)
             if(num_paths == 1):
-                self.updater.bot.send_photo(chat_id=chat_id, photo=open(paths[0], 'rb'), caption=caption)
+                self.updater.bot.send_photo(chat_id=chat_id, photo=open(paths[0], 'rb'), caption=caption, parse_mode="html")
             elif(num_paths >= 2 and num_paths <= 10):
                 media = []
                 for path in paths:
                     media.append(InputMediaPhoto(open(path, "rb")))
 
                 media[0].caption = caption
+                media[0].parse_mode = "html"
                 self.updater.bot.sendMediaGroup(chat_id=chat_id, media=media)
             else:
                 logging.error(f"paths length is too small or too big, length {str(num_paths)}")
