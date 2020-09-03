@@ -31,7 +31,7 @@ def extract_attachements(email, output_folder):
             if part.get_content_maintype() == 'multipart': continue
             if part.get('Content-Disposition') is None: continue
 
-            filename = part.get_filename()
+            filename = part.get_filename() or ""
 
             if filename.endswith("jpg") or filename.endswith("jpeg") or filename.endswith("png"):
                 attachments.append(os.path.join(output_folder, filename))
