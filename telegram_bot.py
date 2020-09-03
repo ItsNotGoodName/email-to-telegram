@@ -49,4 +49,4 @@ class TelegramBot():
         except Exception as e: # TODO: Be specific on on exceptions
             logging.error(e)
 
-        self.last_message_sent = time()
+        self.last_message_time = time()
