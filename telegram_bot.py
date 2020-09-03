@@ -9,7 +9,12 @@ def api_interaction(func):
         if(time() - self.last_message_time < self.message_timeout):
             logging.debug(f"Sleeping for {self.message_timeout}")
             sleep(self.message_timeout)
-        func(*args, **kwargs)
+
+        try:
+            func(*args, **kwargs)
+        except Exception as e: # TODO: Be specific on on exceptions
+            logging.error(e)
+
         self.last_message_time = time()
 
     return decorator
@@ -27,25 +32,19 @@ class TelegramBot():
     
     @api_interaction 
     def send_message(self, message, chat_id, disable_notification=False):
-        try:
-            self.updater.bot.sendMessage(chat_id=chat_id, text=message, disable_notification=disable_notification)
-        except Exception as e: # TODO: Be specific on on exceptions
-            logging.error(e)
+        self.updater.bot.sendMessage(chat_id=chat_id, text=message, disable_notification=disable_notification)
 
     @api_interaction 
     def send_photos(self, caption, paths, chat_id):
-        try:
-            num_paths = len(paths)
-            if(num_paths == 1):
-                self.updater.bot.send_photo(chat_id=chat_id, photo=open(paths[0], 'rb'), caption=caption)
-            elif(num_paths >= 2 and num_paths <= 10):
-                media = []
-                for path in paths:
-                    media.append(InputMediaPhoto(open(path, "rb")))
+        num_paths = len(paths)
+        if(num_paths == 1):
+            self.updater.bot.send_photo(chat_id=chat_id, photo=open(paths[0], 'rb'), caption=caption)
+        elif(num_paths >= 2 and num_paths <= 10):
+            media = []
+            for path in paths:
+                media.append(InputMediaPhoto(open(path, "rb")))
 
-                media[0].caption = caption
-                self.updater.bot.sendMediaGroup(chat_id=chat_id, media=media)
-            else:
-                logging.error(f"paths length is too small or too big, length {str(num_paths)}")
-        except Exception as e: # TODO: Be specific on on exceptions
-            logging.error(e)
+            media[0].caption = caption
+            self.updater.bot.sendMediaGroup(chat_id=chat_id, media=media)
+        else:
+            logging.error(f"paths length is too small or too big, length {str(num_paths)}")
