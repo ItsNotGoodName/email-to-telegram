@@ -13,7 +13,7 @@ def dispatch_telegram(parsed_emails):
     for email in parsed_emails:
         for transfer in TRANSFERS: # TODO: Implement better matching
             if email['from'] == transfer['from_address']:
-                message = "Subject: " + email['subject'] + '\n' + 'From: ' + email['from'] + '\n' + email['body']
+                message = f"Subject: {email['subject']}\nFrom: {email['from']}\n{email['body']}"
                 if(email["type"] == "picture"):
                     telegram_bot.send_photos(message, email['attachments'], transfer['chat_id'])
                 else:
