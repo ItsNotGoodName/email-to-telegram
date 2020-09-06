@@ -38,6 +38,8 @@ def extract_attachements(email, output_folder):
                 fb = open(os.path.join(output_folder, filename),'wb') # TODO: Add catch here
                 fb.write(part.get_payload(decode=True))
                 fb.close()
+            elif filename == None:
+                logging.error("Attachment does not have filename")
     return attachments
 
 def extract_body(email):
