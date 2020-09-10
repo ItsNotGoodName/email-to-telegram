@@ -1,5 +1,6 @@
 import os
 from email.header import decode_header
+import re
 import logging
 
 def decode_email_subject(subject):
@@ -8,11 +9,17 @@ def decode_email_subject(subject):
     except Exception:
         return subject
 
+def decode_from_address(from_field):
+    em = re.findall("([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)", from_field)
+    if len(em) == 0:
+        return ""
+    return em[0]
+
 def extract_email(email, output_folder):
     picture_paths = extract_attachements(email, output_folder)
     e = {
         "subject"   : decode_email_subject(email['subject']), 
-        "from"      : email['From'].replace('<', '').replace('>', ''),
+        "from"      : decode_from_address(email['From']),
         "body"      : extract_body(email),"type": "message"
         }
 
