@@ -15,12 +15,14 @@ You can get the channel's `chat_id` from the web version of telegram.
 # Example service file
 ```
 [Unit]
-Description=Starts email to telegram bot
+Description=Starts email-to-telegram-bot
 
 [Service]
-User=telegrambot
-WorkingDirectory=/path/to/directory
-ExecStart=/usr/bin/python3 /path/to/directory/main.py
+User=telegram-bot
+WorkingDirectory=/PATH/TO/INSTALLATION
+ExecStart=/usr/bin/python3 /PATH/TO/INSTALLATION/main.py
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target
