@@ -2,6 +2,10 @@
 
 Telegram bot that reads a mailbox file and forwards it to a Telegram channel. It can handle png and jpeg attachments. 
 
+This requires postfix to receive emails. 
+
+Setup postfix using Ansible: https://github.com/ItsNotGoodName/debian-postfix-role
+
 # Installation
 ```
 pip3 install --user -r requirements.txt
