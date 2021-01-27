@@ -2,8 +2,8 @@ import mailbox
 import os
 import logging
 
-from constants import MAIL_PATH, ATTACHMENTS_FOLDER, MAIL_FOLDER, ENV, TRANSFERS
-from instance import mail_access, telegram_bot
+from email_to_telegram.constants import MAIL_PATH, ATTACHMENTS_FOLDER, MAIL_FOLDER, ENV, TRANSFERS
+from email_to_telegram.instance import mail_access, telegram_bot
 
 def consume_mailbox(mail_access):
     parsed_emails = mail_access.parse_emails()
@@ -20,6 +20,9 @@ def dispatch_telegram(parsed_emails):
                     telegram_bot.send_message(message, transfer['chat_id'], disable_notification=True)
 
 def main():
+    if ENV != "production":
+        logging.basicConfig(level=logging.DEBUG)
+
     if not os.path.exists(ATTACHMENTS_FOLDER):
         os.makedirs(ATTACHMENTS_FOLDER)
 
@@ -28,9 +31,3 @@ def main():
     logging.debug(f"Watching {MAIL_PATH}")
     mail_access.notifier.loop()
     telegram_bot.updater.stop()
-
-if __name__ == "__main__":
-    if ENV != "production":
-        logging.basicConfig(level=logging.DEBUG)
-
-    main()

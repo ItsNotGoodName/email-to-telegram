@@ -1,5 +1,7 @@
 import os
-import secrets
+import sys
+import pathlib
+import logging
 
 import configparser
 
@@ -24,5 +26,15 @@ def load_config(file_name):
         chat_id = config[section]["chat_id"]
         from_address = config[section]["from_address"]
         TRANSFERS.append({"chat_id": chat_id, "from_address": from_address})
+    print(ENV)
 
-load_config('config.ini')
+system_config = pathlib.Path("/etc/email-to-telegram/config.ini")
+if system_config.exists ():
+    load_config(_system_config)
+else:
+    local_config = pathlib.Path("config.ini")
+    if local_config.exists():
+        load_config('config.ini')
+    else:
+        logging.error(f"No valid 'config.ini' file")
+        sys.exit()

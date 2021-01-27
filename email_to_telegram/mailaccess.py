@@ -2,7 +2,7 @@ import pyinotify
 import logging
 import mailbox
 
-from utils import extract_email
+from email_to_telegram.utils import extract_email
 
 class _OnChangeHandler(pyinotify.ProcessEvent):
     def my_init(self,**kargs):
