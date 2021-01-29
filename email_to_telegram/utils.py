@@ -3,11 +3,13 @@ from email.header import decode_header
 import re
 import logging
 
+
 def decode_email_subject(subject):
     try:
-        return str((decode_header(subject)[0][0]), 'utf-8')
+        return str((decode_header(subject)[0][0]), "utf-8")
     except Exception:
         return subject
+
 
 def decode_from_address(from_field):
     em = re.findall("([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)", from_field)
@@ -15,53 +17,69 @@ def decode_from_address(from_field):
         return ""
     return em[0]
 
+
 def extract_email(email, output_folder):
     picture_paths = extract_attachements(email, output_folder)
     e = {
-        "subject"   : decode_email_subject(email['subject']), 
-        "from"      : decode_from_address(email['From']),
-        "body"      : extract_body(email),"type": "message"
-        }
+        "subject": decode_email_subject(email["subject"]),
+        "from": decode_from_address(email["From"]),
+        "to": decode_from_address(email["To"]),
+        "body": extract_body(email),
+        "type": "message",
+    }
 
-    if len(picture_paths) == 0: # It is a normal message
-        e['type'] = 'message'
+    if len(picture_paths) == 0:  # It is a normal message
+        e["type"] = "message"
         return e
 
-    e['type'] = 'picture' 
-    e['attachments'] = picture_paths
+    e["type"] = "picture"
+    e["attachments"] = picture_paths
     return e
+
 
 def extract_attachements(email, output_folder):
     attachments = []
-    if email.get_content_maintype() == 'multipart':
+    if email.get_content_maintype() == "multipart":
         for part in email.walk():
-            if part.get_content_maintype() == 'multipart': continue
-            if part.get('Content-Disposition') is None: continue
+            if part.get_content_maintype() == "multipart":
+                continue
+            if part.get("Content-Disposition") is None:
+                continue
 
             filename = part.get_filename() or ""
 
-            if filename.endswith("jpg") or filename.endswith("jpeg") or filename.endswith("png"):
+            if (
+                filename.endswith("jpg")
+                or filename.endswith("jpeg")
+                or filename.endswith("png")
+            ):
                 attachments.append(os.path.join(output_folder, filename))
-                fb = open(os.path.join(output_folder, filename),'wb') # TODO: Add catch here
+                fb = open(
+                    os.path.join(output_folder, filename), "wb"
+                )  # TODO: Add catch here
                 fb.write(part.get_payload(decode=True))
                 fb.close()
             elif filename == None:
                 logging.error("Attachment does not have filename")
     return attachments
 
+
 def extract_body(email):
     if email.is_multipart():
         for part in email.walk():
             ctype = part.get_content_type()
-            cdispo = str(part.get('Content-Disposition'))
+            cdispo = str(part.get("Content-Disposition"))
 
             # skip any text/plain (txt) attachments
-            if (ctype == 'text/plain' or ctype == 'text/html') and 'attachment' not in cdispo:
-                return str(part.get_payload(decode=True), 'utf-8')  # decode
+            if (
+                ctype == "text/plain" or ctype == "text/html"
+            ) and "attachment" not in cdispo:
+                return str(part.get_payload(decode=True), "utf-8")  # decode
     # not multipart - i.e. plain text, no attachments, keeping fingers crossed
     else:
-        return str(email.get_payload(decode=True), 'utf-8')
+        return str(email.get_payload(decode=True), "utf-8")
     return ""
+
 
 def cleanup_attachments():
     pass
