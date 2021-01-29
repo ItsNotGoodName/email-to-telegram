@@ -5,13 +5,13 @@ import re
 import logging
 
 
-def extract_email(email, output_folder):
+def extract_email(email_raw, output_folder):
     picture_paths = extract_attachements(email, output_folder)
-    e = email.message_from_string(email)
+    e = email.message_from_string(email_raw)
     e["To"] = re.findall("([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)", e["To"])[
         0
     ]
-    e["Body"] = extract_body(email)
+    e["Body"] = extract_body(email_raw)
     if len(picture_paths) == 0:  # It is a normal message
         e["Type"] = "message"
         return e
