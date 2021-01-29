@@ -1,11 +1,11 @@
-# Email to Telegram Bot
+# Email to Telegram
 **Warning: Spaghetti**
 
-Telegram bot that reads a mailbox file and forwards it to a Telegram channel. It can handle png and jpeg attachments. 
+Telegram bot that reads a mailbox file and forwards it to the appropriate Telegram chat. It can handle png and jpg attachments. 
 
 This requires postfix to receive emails.
 
-Setup postfix using Ansible: https://github.com/ItsNotGoodName/role-email-to-telegram
+Ansible role: https://github.com/ItsNotGoodName/role-email-to-telegram
 
 # Installation
 ```
@@ -15,9 +15,9 @@ pip3 install .
 # Configuration
 Copy `config.def.ini` to `/etc/email-to-telegram/config.ini` and edit it.
 
-You can get the channel's `chat_id` from the web version of telegram.
+You can get the `chat_id` from the web version of Telegram.
 
-# Example service file
+# Example Systemd service file
 ```
 [Unit]
 Description=Starts email-to-telegram-bot
