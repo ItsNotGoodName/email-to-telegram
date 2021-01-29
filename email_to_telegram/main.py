@@ -20,13 +20,13 @@ def consume_mailbox(mail_access):
 def dispatch_telegram(parsed_emails):
     for email in parsed_emails:
         for transfer in TRANSFERS:
-            if email["to"] == transfer["to_address"]:
+            if email["To"] == transfer["to_address"]:
                 message = (
-                    f"Subject: {email['subject']}\nTo: {email['to']}\n{email['body']}"
+                    f"Subject: {email['Subject']}\nTo: {email['To']}\n{email['Body']}"
                 )
-                if email["type"] == "picture":
+                if email["Type"] == "picture":
                     telegram_bot.send_photos(
-                        message, email["attachments"], transfer["chat_id"]
+                        message, email["Attachments"], transfer["chat_id"]
                     )
                 else:
                     telegram_bot.send_message(

@@ -1,39 +1,23 @@
 import os
+import email
 from email.header import decode_header
 import re
 import logging
 
 
-def decode_email_subject(subject):
-    try:
-        return str((decode_header(subject)[0][0]), "utf-8")
-    except Exception:
-        return subject
-
-
-def decode_from_address(from_field):
-    em = re.findall("([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)", from_field)
-    if len(em) == 0:
-        return ""
-    return em[0]
-
-
 def extract_email(email, output_folder):
     picture_paths = extract_attachements(email, output_folder)
-    e = {
-        "subject": decode_email_subject(email["subject"]),
-        "from": decode_from_address(email["From"]),
-        "to": decode_from_address(email["To"]),
-        "body": extract_body(email),
-        "type": "message",
-    }
-
+    e = email.message_from_string(email)
+    e["To"] = re.findall("([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)", e["To"])[
+        0
+    ]
+    e["Body"] = extract_body(email)
     if len(picture_paths) == 0:  # It is a normal message
-        e["type"] = "message"
+        e["Type"] = "message"
         return e
 
-    e["type"] = "picture"
-    e["attachments"] = picture_paths
+    e["Type"] = "picture"
+    e["Attachments"] = picture_paths
     return e
 
 
