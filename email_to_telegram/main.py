@@ -20,7 +20,7 @@ def consume_mailbox(mail_access):
 def dispatch_telegram(parsed_emails):
     for email in parsed_emails:
         for transfer in TRANSFERS:
-            if email["To"] == transfer["to_address"]:
+            if transfer["to_address"] in email["To"]:
                 message = (
                     f"Subject: {email['Subject']}\nTo: {email['To']}\n{email['Body']}"
                 )

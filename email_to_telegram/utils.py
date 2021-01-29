@@ -7,7 +7,7 @@ import logging
 
 def extract_email(email_raw, output_folder):
     picture_paths = extract_attachements(email_raw, output_folder)
-    e = email.message_from_string(email_raw)
+    e = email.message_from_string(str(email_raw))
     e["To"] = re.findall("([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)", e["To"])[
         0
     ]
