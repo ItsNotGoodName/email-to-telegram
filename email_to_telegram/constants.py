@@ -29,8 +29,8 @@ def load_config(file_name):
     print(ENV)
 
 system_config = pathlib.Path("/etc/email-to-telegram/config.ini")
-if system_config.exists ():
-    load_config(_system_config)
+if system_config.exists():
+    load_config(system_config)
 else:
     local_config = pathlib.Path("config.ini")
     if local_config.exists():
