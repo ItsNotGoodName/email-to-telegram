@@ -2,22 +2,37 @@ import mailbox
 import os
 import logging
 
-from email_to_telegram.constants import MAIL_PATH, ATTACHMENTS_FOLDER, MAIL_FOLDER, ENV, TRANSFERS
+from email_to_telegram.constants import (
+    MAIL_PATH,
+    ATTACHMENTS_FOLDER,
+    MAIL_FOLDER,
+    ENV,
+    TRANSFERS,
+)
 from email_to_telegram.instance import mail_access, telegram_bot
+
 
 def consume_mailbox(mail_access):
     parsed_emails = mail_access.parse_emails()
     dispatch_telegram(parsed_emails)
 
+
 def dispatch_telegram(parsed_emails):
     for email in parsed_emails:
-        for transfer in TRANSFERS: # TODO: Implement better matching
-            if email['from'] == transfer['from_address']:
-                message = f"Subject: {email['subject']}\nFrom: {email['from']}\n{email['body']}"
-                if(email["type"] == "picture"):
-                    telegram_bot.send_photos(message, email['attachments'], transfer['chat_id'])
+        for transfer in TRANSFERS:
+            if email["to"] == transfer["to_address"]:
+                message = (
+                    f"Subject: {email['subject']}\nTo: {email['to']}\n{email['body']}"
+                )
+                if email["type"] == "picture":
+                    telegram_bot.send_photos(
+                        message, email["attachments"], transfer["chat_id"]
+                    )
                 else:
-                    telegram_bot.send_message(message, transfer['chat_id'], disable_notification=True)
+                    telegram_bot.send_message(
+                        message, transfer["chat_id"], disable_notification=True
+                    )
+
 
 def main():
     if ENV != "production":
