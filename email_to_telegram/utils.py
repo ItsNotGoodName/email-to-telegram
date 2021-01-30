@@ -4,6 +4,11 @@ from email.header import decode_header
 import re
 import logging
 
+def decode_email_subject(subject):
+    try:
+        return str((decode_header(subject)[0][0]), 'utf-8')
+    except Exception:
+        return subject
 
 def extract_email(email_raw, output_folder):
     picture_paths = extract_attachements(email_raw, output_folder)
@@ -12,6 +17,8 @@ def extract_email(email_raw, output_folder):
         0
     ]
     e["Body"] = extract_body(email_raw)
+    e["Subject"] = decode_email_subject(e["Subject"])
+    
     if len(picture_paths) == 0:  # It is a normal message
         e["Type"] = "message"
         return e
