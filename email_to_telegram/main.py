@@ -2,6 +2,7 @@ import mailbox
 import os
 import logging
 
+
 from email_to_telegram.constants import (
     MAIL_PATH,
     ATTACHMENTS_FOLDER,
@@ -10,6 +11,7 @@ from email_to_telegram.constants import (
     TRANSFERS,
 )
 from email_to_telegram.instance import mail_access, telegram_bot
+from email_to_telegram.utils import decode_email_subject
 
 
 def consume_mailbox(mail_access):
@@ -21,9 +23,7 @@ def dispatch_telegram(parsed_emails):
     for email in parsed_emails:
         for transfer in TRANSFERS:
             if transfer["to_address"] in email["To"]:
-                message = (
-                    f"Subject: {email['Subject']}\nTo: {email['To']}\n{email['Body']}"
-                )
+                message = f"Subject: {decode_email_subject(email['Subject'])}\nTo: {email['To']}\n{email['Body']}"
                 if email["Type"] == "picture":
                     telegram_bot.send_photos(
                         message, email["Attachments"], transfer["chat_id"]
