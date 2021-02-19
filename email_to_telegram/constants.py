@@ -1,44 +1,55 @@
-import os
 import sys
 import pathlib
 import logging
-
 import configparser
 
-MAIL_FOLDER = (
-    MAIL_FILE
-) = MAIL_PATH = ATTACHMENTS_FOLDER = MESSAGE_TIMEOUT = TOKEN = ENV = TRANSFERS = None
+# Required variables
+MAIL_FOLDER = MAIL_FILE = MAIL_PATH = TOKEN = TRANSFERS = None
+
+# Optional variables
+ENV = "production"
+CONFIG_PATHS = ["/etc/email-to-telegram/config.ini", "config.ini"]
+ATTACHMENTS_FOLDER = "/tmp/telegram-attachments_folder"
+MESSAGE_TIMEOUT = 3
 
 
-def load_config(file_name):
+def load_config(config_path):
     global MAIL_FOLDER, MAIL_FILE, MAIL_PATH, ATTACHMENTS_FOLDER, MESSAGE_TIMEOUT, TOKEN, ENV, TRANSFERS
 
     config = configparser.ConfigParser()
-    config.read(file_name)
+    config.read(config_path)
 
-    MAIL_FOLDER = config["DEFAULT"]["mail_folder"]
-    MAIL_FILE = config["DEFAULT"]["mail_file"]
-    MAIL_PATH = os.path.join(MAIL_FOLDER, MAIL_FILE)
-    ATTACHMENTS_FOLDER = config["DEFAULT"]["attachments_folder"]
-    MESSAGE_TIMEOUT = int(config["DEFAULT"]["message_timeout"])
+    # Required variables
     TOKEN = config["DEFAULT"]["token"]
-    ENV = config["DEFAULT"]["env"]
+    MAIL_PATH = pathlib.Path((config["DEFAULT"]["mail_path"]))
+    MAIL_FOLDER = MAIL_PATH.parent
+    MAIL_FILE = MAIL_PATH.name
 
+    # Optional variables
+    MESSAGE_TIMEOUT = int(config["DEFAULT"].get("message_timeout", MESSAGE_TIMEOUT))
+    ATTACHMENTS_FOLDER = config["DEFAULT"].get("attachments_folder", ATTACHMENTS_FOLDER)
+    ENV = config["DEFAULT"].get("env", ENV)
+
+    # Email to telegram transfers
     TRANSFERS = []
     for section in config.sections():
+        # Required variables
         chat_id = config[section]["chat_id"]
-        to_address = config[section]["to_address"]
-        TRANSFERS.append({"chat_id": chat_id, "to_address": to_address})
-    print(ENV)
+
+        # Optional variables
+        to_address = config[section].get("to_address")
+        from_address = config[section].get("from_address")
+
+        TRANSFERS.append(
+            {"chat_id": chat_id, "to_address": to_address, "from_address": from_address}
+        )
 
 
-system_config = pathlib.Path("/etc/email-to-telegram/config.ini")
-if system_config.exists():
-    load_config(system_config)
+for i in CONFIG_PATHS:
+    path = pathlib.Path(i)
+    if path.exists():
+        load_config(path)
+        break
 else:
-    local_config = pathlib.Path("config.ini")
-    if local_config.exists():
-        load_config("config.ini")
-    else:
-        logging.error(f"No valid 'config.ini' file")
-        sys.exit()
+    logging.error("No valid 'config.ini' found")
+    sys.exit()
