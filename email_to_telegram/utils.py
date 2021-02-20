@@ -1,7 +1,16 @@
 import logging
 import mailbox
 import re
+import pathlib
 import mailparser
+
+
+def get_attachments_paths(parsed_email, attachment_folder):
+    parsed_email.write_attachments(attachment_folder)
+    paths = []
+    for attachment in parsed_email.attachments:
+        paths.append(attachment_folder / pathlib.Path(attachment["filename"]))
+    return paths
 
 
 def get_emails(mail_path):

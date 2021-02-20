@@ -41,7 +41,12 @@ def load_config(config_path):
         from_address = config[section].get("from_address")
 
         TRANSFERS.append(
-            {"chat_id": chat_id, "to_address": to_address, "from_address": from_address}
+            {
+                "chat_id": chat_id,
+                "to_address": to_address,
+                "from_address": from_address,
+                "name": section,
+            }
         )
 
 
