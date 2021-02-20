@@ -40,7 +40,6 @@ class TelegramBot:
         self.updater.bot.sendMessage(
             chat_id=chat_id, text=message, disable_notification=disable_notification
         )
-        logging.debug("Sent message")
 
     @api_interaction
     def send_photos(self, chat_id, paths, caption=""):
@@ -60,4 +59,3 @@ class TelegramBot:
             logging.error(
                 "paths length is too small or too big, length %s", str(length)
             )
-        logging.debug("Sent pictures")
