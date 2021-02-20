@@ -4,14 +4,6 @@ import pathlib
 import mailparser
 
 
-def get_attachments_paths(email, attachment_folder):
-    email.write_attachments(attachment_folder)
-    paths = []
-    for attachment in email.attachments:
-        paths.append(attachment_folder / pathlib.Path(attachment["filename"]))
-    return paths
-
-
 def get_emails(mail_path):
     mbox = mailbox.mbox(mail_path)
     parsed_emails = []
@@ -19,7 +11,7 @@ def get_emails(mail_path):
         mbox.lock()
     except mailbox.ExternalClashError:
         logging.error("Mailbox not consumed, it is being access by another program")
-        return parsed_emails
+        return parsed_emails, 0
 
     keys = mbox.keys()
     for key in keys:
@@ -29,7 +21,15 @@ def get_emails(mail_path):
     mbox.flush()
     mbox.unlock()
     mbox.close()
-    return parsed_emails
+    return parsed_emails, 1
+
+
+def get_attachments_paths(email, attachment_folder):
+    email.write_attachments(attachment_folder)
+    paths = []
+    for attachment in email.attachments:
+        paths.append(attachment_folder / pathlib.Path(attachment["filename"]))
+    return paths
 
 
 def should_skip_address(email, transfer, address):
