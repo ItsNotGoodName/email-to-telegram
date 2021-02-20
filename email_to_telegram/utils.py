@@ -1,6 +1,5 @@
 import logging
 import mailbox
-import re
 import pathlib
 import mailparser
 
@@ -34,16 +33,14 @@ def get_emails(mail_path):
 
 
 def should_skip_address(email, transfer, address):
-    if transfer[address] is not None:
-        for to in email.to:
-            if to[1] == transfer[address]:
-                logging.debug("%s : %s matches", transfer["name"], address)
-                return False
-        else:
-            logging.debug(
-                "%s : skipping since %s does not match", transfer["name"], address
-            )
-            return True
-    else:
+    if transfer[address] is None:
         logging.debug("%s : %s is None", transfer["name"], address)
         return False
+
+    for to_address in email.to:
+        if to_address[1] == transfer[address]:
+            logging.debug("%s : %s matches", transfer["name"], address)
+            return False
+
+    logging.debug("%s : skipping since %s does not match", transfer["name"], address)
+    return True
