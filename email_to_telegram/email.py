@@ -1,28 +1,33 @@
 import logging
-import mailbox
 
-import mailparser
 from watchdog.events import FileSystemEventHandler
 
-from .constants import MAIL_PATH, MAIL_FOLDER, MAIL_FILE, ATTACHMENTS_FOLDER, TRANSFERS
+from .constants import MAIL_PATH, ATTACHMENTS_FOLDER, TRANSFERS
 from .utils import get_emails, should_skip_address, get_attachments_paths
 
 
-class MailHandler(FileSystemEventHandler):
+class EmailHandler(FileSystemEventHandler):
     def __init__(self, bot, lock_file, mail_path):
         self.bot = bot
         self.lock_file = lock_file
         self.mail_path = mail_path
         self.counter = 0
+        logging.debug("Current count %s", self.counter)
+
+    def consume_emails(self):
+        emails, delete_count = get_emails(self.mail_path)
+        self.counter += delete_count
+        consume_emails(emails, self.bot)
 
     def on_deleted(self, event):
+        logging.debug("Current count %s", self.counter)
         if event.src_path == self.lock_file:
             if self.counter <= 0:
-                emails, delete_count = get_emails(self.mail_path)
-                self.counter += delete_count
-                consume_emails(emails, self.bot)
+                self.consume_emails()
+                logging.debug("Current count %s", self.counter)
             else:
                 self.counter -= 1
+                logging.debug("Current count %s", self.counter)
 
 
 def consume_emails(emails, bot):

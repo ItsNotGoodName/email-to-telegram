@@ -15,8 +15,8 @@ def api_interaction(func):
 
         try:
             func(*args, **kwargs)
-        except TelegramError as e:
-            logging.error(e)
+        except TelegramError as error:
+            logging.error(error)
 
         self.last_message_time = time()
 
