@@ -1,5 +1,4 @@
 # Email to Telegram
-**Warning: Spaghetti**
 
 Telegram bot that reads a mailbox file and forwards it to the appropriate Telegram chat. It can handle png and jpg attachments. 
 
@@ -16,6 +15,8 @@ pip3 install .
 Copy `config.def.ini` to `/etc/email-to-telegram/config.ini` and edit it.
 
 You can get the `chat_id` from the web version of Telegram.
+
+https://stackoverflow.com/a/45577773
 
 # Example Systemd service file
 ```
