@@ -38,7 +38,9 @@ class TelegramBot:
     @api_interaction
     def send_text(self, chat_id, text, disable_notification=False):
         self.updater.bot.sendMessage(
-            chat_id=chat_id, text=text, disable_notification=disable_notification
+            chat_id=chat_id,
+            text=text,
+            disable_notification=disable_notification,
         )
 
     @api_interaction

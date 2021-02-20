@@ -3,7 +3,14 @@ import logging
 
 from watchdog.observers import Observer
 
-from .constants import ENV, TOKEN, MESSAGE_TIMEOUT, MAIL_PATH, MAIL_FOLDER, MAIL_FILE
+from .constants import (
+    ENV,
+    TOKEN,
+    MESSAGE_TIMEOUT,
+    MAIL_PATH,
+    MAIL_FOLDER,
+    MAIL_FILE,
+)
 from .telegram_bot import TelegramBot
 from .email import EmailHandler
 

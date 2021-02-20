@@ -10,7 +10,9 @@ def get_emails(mail_path):
     try:
         mbox.lock()
     except mailbox.ExternalClashError:
-        logging.error("Mailbox not consumed, it is being access by another program")
+        logging.error(
+            "Mailbox not consumed, it is being access by another program"
+        )
         return parsed_emails, 0
 
     keys = mbox.keys()
@@ -42,5 +44,7 @@ def should_skip_address(email, transfer, address):
             logging.debug("%s : %s matches", transfer["name"], address)
             return False
 
-    logging.debug("%s : skipping since %s does not match", transfer["name"], address)
+    logging.debug(
+        "%s : skipping since %s does not match", transfer["name"], address
+    )
     return True

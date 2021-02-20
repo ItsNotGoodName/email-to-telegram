@@ -28,8 +28,12 @@ def load_config(config_path):
     MAIL_FILE = MAIL_PATH.name
 
     # Optional variables
-    MESSAGE_TIMEOUT = int(config["DEFAULT"].get("message_timeout", MESSAGE_TIMEOUT))
-    ATTACHMENTS_FOLDER = config["DEFAULT"].get("attachments_folder", ATTACHMENTS_FOLDER)
+    MESSAGE_TIMEOUT = int(
+        config["DEFAULT"].get("message_timeout", MESSAGE_TIMEOUT)
+    )
+    ATTACHMENTS_FOLDER = config["DEFAULT"].get(
+        "attachments_folder", ATTACHMENTS_FOLDER
+    )
     ENV = config["DEFAULT"].get("env", ENV)
     DISABLE_TEXT = config["DEFAULT"].get("disable_text", DISABLE_TEXT)
     DISABLE_PHOTO = config["DEFAULT"].get("disable_photo", DISABLE_PHOTO)
