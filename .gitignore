@@ -143,4 +143,4 @@ dmypy.json
 secrets.py
 attachments
 config.ini
-
+test/fixtures
