@@ -21,7 +21,7 @@ setup(
     install_requires=["python-telegram-bot", "pyinotify"],
     entry_points={
         "console_scripts": [
-            "email-to-telegram=email_to_telegram.main:main",
+            "email-to-telegram=email_to_telegram.__main__:main",
         ],
     },
     keywords="bot, telegram",
@@ -29,4 +29,3 @@ setup(
         "Source": "https://github.com/ItsNotGoodName/email-to-telegram",
     },
 )
-
