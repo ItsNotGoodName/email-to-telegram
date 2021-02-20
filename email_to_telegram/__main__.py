@@ -10,48 +10,26 @@ from .constants import (
     ATTACHMENTS_FOLDER,
 )
 from .telegram_bot import TelegramBot
-from .utils import get_emails, get_attachments_paths
+from .utils import get_emails, get_attachments_paths, should_skip_address
 
 
-def transfer(emails, bot):
+def consume_emails(emails, bot):
     for email in emails:
-        paths = get_attachments_paths(email, ATTACHMENTS_FOLDER)
+        attachment_paths = get_attachments_paths(email, ATTACHMENTS_FOLDER)
         for transfer in TRANSFERS:
-            # Check if from_address matches or is None
-            if transfer["from_address"] is not None:
-                for from_ in email.from_:
-                    if from_[1] == transfer["from_address"]:
-                        logging.debug("%s : from_address matches", transfer["name"])
-                        break
-                else:
-                    logging.debug(
-                        "%s : skipping since from_address does not match",
-                        transfer["name"],
-                    )
-                    continue
-            else:
-                logging.debug("%s : from_address is None", transfer["name"])
+            # Skip if from_address or to_address matches or is None
+            if should_skip_address(
+                email, transfer, "to_address"
+            ) or should_skip_address(email, transfer, "from_address"):
+                continue
 
-            # Check if to_address matches or is None
-            if transfer["to_address"] is not None:
-                for to in email.to:
-                    if to[1] == transfer["to_address"]:
-                        logging.debug("%s : to_address matches", transfer["name"])
-                        break
-                else:
-                    logging.debug(
-                        "%s : skipping since to_address does not match",
-                        transfer["name"],
-                    )
-                    continue
-            else:
-                logging.debug("%s : to_address is None", transfer["name"])
-
-            # Send message or send photo
-            if len(paths) > 0:
+            # Send text or send photo if not disabled
+            if len(attachment_paths) > 0:
                 if not transfer["disable_photo"]:
                     bot.send_photo(
-                        transfer["chat_id"], paths, email.subject + "\n" + email.body
+                        transfer["chat_id"],
+                        attachment_paths,
+                        email.subject + "\n" + email.body,
                     )
                 else:
                     logging.debug("%s : photos are disabled", transfer["name"])
@@ -70,7 +48,7 @@ def main():
     logging.info("Entered main")
     bot = TelegramBot(TOKEN, MESSAGE_TIMEOUT)
     emails = get_emails(MAIL_PATH)
-    transfer(emails, bot)
+    consume_emails(emails, bot)
 
 
 if __name__ == "__main__":

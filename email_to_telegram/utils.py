@@ -5,10 +5,10 @@ import pathlib
 import mailparser
 
 
-def get_attachments_paths(parsed_email, attachment_folder):
-    parsed_email.write_attachments(attachment_folder)
+def get_attachments_paths(email, attachment_folder):
+    email.write_attachments(attachment_folder)
     paths = []
-    for attachment in parsed_email.attachments:
+    for attachment in email.attachments:
         paths.append(attachment_folder / pathlib.Path(attachment["filename"]))
     return paths
 
@@ -31,3 +31,19 @@ def get_emails(mail_path):
     mbox.unlock()
     mbox.close()
     return parsed_emails
+
+
+def should_skip_address(email, transfer, address):
+    if transfer[address] is not None:
+        for to in email.to:
+            if to[1] == transfer[address]:
+                logging.debug("%s : %s matches", transfer["name"], address)
+                return False
+        else:
+            logging.debug(
+                "%s : skipping since %s does not match", transfer["name"], address
+            )
+            return True
+    else:
+        logging.debug("%s : %s is None", transfer["name"], address)
+        return False
