@@ -11,10 +11,12 @@ ENV = "production"
 CONFIG_PATHS = ["/etc/email-to-telegram/config.ini", "config.ini"]
 ATTACHMENTS_FOLDER = "/tmp/telegram-attachments_folder"
 MESSAGE_TIMEOUT = 3
+DISABLE_TEXT = False
+DISABLE_PHOTO = False
 
 
 def load_config(config_path):
-    global MAIL_FOLDER, MAIL_FILE, MAIL_PATH, ATTACHMENTS_FOLDER, MESSAGE_TIMEOUT, TOKEN, ENV, TRANSFERS
+    global MAIL_FOLDER, MAIL_FILE, MAIL_PATH, ATTACHMENTS_FOLDER, MESSAGE_TIMEOUT, TOKEN, ENV, TRANSFERS, DISABLE_TEXT, DISABLE_PHOTO
 
     config = configparser.ConfigParser()
     config.read(config_path)
@@ -29,6 +31,8 @@ def load_config(config_path):
     MESSAGE_TIMEOUT = int(config["DEFAULT"].get("message_timeout", MESSAGE_TIMEOUT))
     ATTACHMENTS_FOLDER = config["DEFAULT"].get("attachments_folder", ATTACHMENTS_FOLDER)
     ENV = config["DEFAULT"].get("env", ENV)
+    DISABLE_TEXT = config["DEFAULT"].get("disable_text", DISABLE_TEXT)
+    DISABLE_PHOTO = config["DEFAULT"].get("disable_photo", DISABLE_PHOTO)
 
     # Email to telegram transfers
     TRANSFERS = []
@@ -39,6 +43,8 @@ def load_config(config_path):
         # Optional variables
         to_address = config[section].get("to_address")
         from_address = config[section].get("from_address")
+        disable_text = config[section].get("disable_text", DISABLE_TEXT)
+        disable_photo = config[section].get("disable_photo", DISABLE_PHOTO)
 
         TRANSFERS.append(
             {
@@ -46,6 +52,8 @@ def load_config(config_path):
                 "to_address": to_address,
                 "from_address": from_address,
                 "name": section,
+                "disable_text": disable_text,
+                "disable_photo": disable_photo,
             }
         )
 

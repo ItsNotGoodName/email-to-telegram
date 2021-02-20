@@ -49,11 +49,19 @@ def transfer(emails, bot):
 
             # Send message or send photo
             if len(paths) > 0:
-                bot.send_photos(
-                    transfer["chat_id"], paths, email.subject + "\n" + email.body
-                )
+                if not transfer["disable_photo"]:
+                    bot.send_photos(
+                        transfer["chat_id"], paths, email.subject + "\n" + email.body
+                    )
+                else:
+                    logging.debug("%s : photos are disabled", transfer["name"])
             else:
-                bot.send_message(transfer["chat_id"], email.subject + "\n" + email.body)
+                if not transfer["disable_text"]:
+                    bot.send_message(
+                        transfer["chat_id"], email.subject + "\n" + email.body
+                    )
+                else:
+                    logging.debug("%s : text is disabled", transfer["name"])
 
 
 def main():
