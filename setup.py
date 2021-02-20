@@ -18,7 +18,7 @@ setup(
     author_email="gurnaindeol@gmail.com",
     packages=find_packages(exclude="test"),
     python_requires=">=3.6, <4",
-    install_requires=["python-telegram-bot", "pyinotify"],
+    install_requires=["python-telegram-bot", "pyinotify", "mail-parser"],
     entry_points={
         "console_scripts": [
             "email-to-telegram=email_to_telegram.__main__:main",
