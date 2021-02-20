@@ -10,7 +10,7 @@ def api_interaction(func):
     def decorator(*args, **kwargs):
         self = args[0]
         if time() - self.last_message_time < self.message_timeout:
-            logging.info(f"Sleeping for {self.message_timeout}")
+            logging.info("Sleeping for %s", self.message_timeout)
             sleep(self.message_timeout)
 
         try:
@@ -36,13 +36,13 @@ class TelegramBot:
         logging.debug("Replied to ping")
 
     @api_interaction
-    def send_message(self, chat_id, message, disable_notification=False):
+    def send_text(self, chat_id, text, disable_notification=False):
         self.updater.bot.sendMessage(
-            chat_id=chat_id, text=message, disable_notification=disable_notification
+            chat_id=chat_id, text=text, disable_notification=disable_notification
         )
 
     @api_interaction
-    def send_photos(self, chat_id, paths, caption=""):
+    def send_photo(self, chat_id, paths, caption=""):
         length = len(paths)
         if length == 1:
             self.updater.bot.send_photo(
