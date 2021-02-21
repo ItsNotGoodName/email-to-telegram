@@ -50,5 +50,5 @@ def consume_emails(emails, bot):
             elif not transfer["disable_text"]:
                 bot.send_text(
                     transfer["chat_id"],
-                    email.subject + "\n" + str(email.text_plain),
+                    email.subject + "\n" + "".join(email.text_plain),
                 )
