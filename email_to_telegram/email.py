@@ -45,10 +45,10 @@ def consume_emails(emails, bot):
                 bot.send_photo(
                     transfer["chat_id"],
                     attachment_paths,
-                    email.subject + "\n" + email.text_plain,
+                    email.subject + "\n" + str(email.text_plain),
                 )
             elif not transfer["disable_text"]:
                 bot.send_text(
                     transfer["chat_id"],
-                    email.subject + "\n" + email.text_plain,
+                    email.subject + "\n" + str(email.text_plain),
                 )
