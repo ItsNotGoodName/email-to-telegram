@@ -41,19 +41,14 @@ def consume_emails(emails, bot):
                 continue
 
             # Send text or send photo if not disabled
-            if len(attachment_paths) > 0:
-                if not transfer["disable_photo"]:
-                    bot.send_photo(
-                        transfer["chat_id"],
-                        attachment_paths,
-                        email.subject + "\n" + email.body,
-                    )
-                else:
-                    logging.debug("%s : photos are disabled", transfer["name"])
-            else:
-                if not transfer["disable_text"]:
-                    bot.send_text(
-                        transfer["chat_id"], email.subject + "\n" + email.body
-                    )
-                else:
-                    logging.debug("%s : text is disabled", transfer["name"])
+            if len(attachment_paths) > 0 and not transfer["disable_photo"]:
+                bot.send_photo(
+                    transfer["chat_id"],
+                    attachment_paths,
+                    email.subject + "\n" + email.text_plain,
+                )
+            elif not transfer["disable_text"]:
+                bot.send_text(
+                    transfer["chat_id"],
+                    email.subject + "\n" + email.text_plain,
+                )
