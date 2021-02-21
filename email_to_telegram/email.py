@@ -36,8 +36,8 @@ def consume_emails(emails, bot):
         for transfer in TRANSFERS:
             # Skip if from_address or to_address matches or is None
             if should_skip_address(
-                email, transfer, "to_address"
-            ) or should_skip_address(email, transfer, "from_address"):
+                email, transfer, "to"
+            ) or should_skip_address(email, transfer, "from"):
                 continue
 
             # Send text or send photo if not disabled

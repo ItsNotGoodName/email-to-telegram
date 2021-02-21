@@ -35,12 +35,12 @@ def get_attachments_paths(email, attachment_folder):
 
 
 def should_skip_address(email, transfer, address):
-    if transfer[address] is None:
+    if transfer[address + "_address"] is None:
         logging.debug("%s : %s is None", transfer["name"], address)
         return False
 
-    for to_address in email.to:
-        if to_address[1] == transfer[address]:
+    for check_address in email.mail[address]:
+        if check_address[1] == transfer[address + "_address"]:
             logging.debug("%s : %s matches", transfer["name"], address)
             return False
 
