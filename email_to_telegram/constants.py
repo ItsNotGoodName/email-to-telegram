@@ -28,15 +28,14 @@ def load_config(config_path):
     MAIL_FILE = MAIL_PATH.name
 
     # Optional variables
-    MESSAGE_TIMEOUT = int(
-        config["DEFAULT"].get("message_timeout", MESSAGE_TIMEOUT)
-    )
+    MESSAGE_TIMEOUT = config["DEFAULT"].getint("message_timeout", MESSAGE_TIMEOUT)
+ 
     ATTACHMENTS_FOLDER = config["DEFAULT"].get(
         "attachments_folder", ATTACHMENTS_FOLDER
     )
     ENV = config["DEFAULT"].get("env", ENV)
-    DISABLE_TEXT = config["DEFAULT"].get("disable_text", DISABLE_TEXT)
-    DISABLE_PHOTO = config["DEFAULT"].get("disable_photo", DISABLE_PHOTO)
+    DISABLE_TEXT = config["DEFAULT"].getboolean("disable_text", DISABLE_TEXT)
+    DISABLE_PHOTO = config["DEFAULT"].getboolean("disable_photo", DISABLE_PHOTO)
 
     # Email to telegram transfers
     TRANSFERS = []
@@ -47,8 +46,8 @@ def load_config(config_path):
         # Optional variables
         to_address = config[section].get("to_address")
         from_address = config[section].get("from_address")
-        disable_text = config[section].get("disable_text", DISABLE_TEXT)
-        disable_photo = config[section].get("disable_photo", DISABLE_PHOTO)
+        disable_text = config[section].getboolean("disable_text", DISABLE_TEXT)
+        disable_photo = config[section].getboolean("disable_photo", DISABLE_PHOTO)
         caption_chat_id = config[section].get("caption_chat_id", None)
 
         TRANSFERS.append(
