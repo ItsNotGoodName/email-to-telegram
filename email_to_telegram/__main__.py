@@ -10,10 +10,11 @@ from .constants import (
     MAIL_PATH,
     MAIL_FOLDER,
     MAIL_FILE,
+    ATTACHMENTS_FOLDER
 )
 from .telegram_bot import TelegramBot
 from .email import EmailHandler
-
+from .utils import clear_attachments
 
 def main():
     if ENV != "production":
@@ -36,7 +37,8 @@ def main():
     event_handler.consume_emails()
     try:
         while True:
-            time.sleep(1)
+            clear_attachments(ATTACHMENTS_FOLDER)
+            time.sleep(86400)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
