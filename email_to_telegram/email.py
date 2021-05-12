@@ -42,10 +42,18 @@ def consume_emails(emails, bot):
 
             # Send text or send photo if not disabled
             if len(attachment_paths) > 0 and not transfer["disable_photo"]:
+                caption = email.subject + "\n" + "".join(email.text_plain),
+                if not transfer["caption_chat_id"]:
+                    bot.send_text(
+                        transfer["chat_id"],
+                        caption
+                    )
+                    caption = None
+
                 bot.send_photo(
                     transfer["chat_id"],
                     attachment_paths,
-                    email.subject + "\n" + "".join(email.text_plain),
+                    caption
                 )
             elif not transfer["disable_text"]:
                 bot.send_text(

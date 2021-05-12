@@ -44,7 +44,7 @@ class TelegramBot:
         )
 
     @api_interaction
-    def send_photo(self, chat_id, paths, caption=""):
+    def send_photo(self, chat_id, paths, caption=None):
         length = len(paths)
         if length == 1:
             self.updater.bot.send_photo(

@@ -49,6 +49,7 @@ def load_config(config_path):
         from_address = config[section].get("from_address")
         disable_text = config[section].get("disable_text", DISABLE_TEXT)
         disable_photo = config[section].get("disable_photo", DISABLE_PHOTO)
+        caption_chat_id = config[section].get("caption_chat_id", None)
 
         TRANSFERS.append(
             {
@@ -58,6 +59,7 @@ def load_config(config_path):
                 "name": section,
                 "disable_text": disable_text,
                 "disable_photo": disable_photo,
+                "caption_chat_id": caption_chat_id,
             }
         )
 
