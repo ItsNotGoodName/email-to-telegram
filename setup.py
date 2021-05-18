@@ -9,8 +9,8 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="email-to-telegram",
-    version="1.0.0",
-    description="Parses mail from mail files and forwards to Telegram channel",
+    version="1.0.1",
+    description="Forwards mail from mail file to Telegram chat.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/ItsNotGoodName/email-to-telegram",
