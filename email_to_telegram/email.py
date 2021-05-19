@@ -49,6 +49,8 @@ def consume_emails(emails, bot):
                         caption
                     )
                     caption = None
+                elif transfer["disable_caption"]:
+                    caption = None
 
                 bot.send_photo(
                     transfer["chat_id"],

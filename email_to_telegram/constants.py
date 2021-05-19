@@ -13,10 +13,11 @@ ATTACHMENTS_FOLDER = "/tmp/telegram-attachments_folder"
 MESSAGE_TIMEOUT = 3
 DISABLE_TEXT = False
 DISABLE_PHOTO = False
+DISABLE_CAPTION = False
 
 
 def load_config(config_path):
-    global MAIL_FOLDER, MAIL_FILE, MAIL_PATH, ATTACHMENTS_FOLDER, MESSAGE_TIMEOUT, TOKEN, ENV, TRANSFERS, DISABLE_TEXT, DISABLE_PHOTO
+    global MAIL_FOLDER, MAIL_FILE, MAIL_PATH, ATTACHMENTS_FOLDER, MESSAGE_TIMEOUT, TOKEN, ENV, TRANSFERS, DISABLE_TEXT, DISABLE_PHOTO, DISABLE_CAPTION
 
     config = configparser.ConfigParser()
     config.read(config_path)
@@ -36,6 +37,7 @@ def load_config(config_path):
     ENV = config["DEFAULT"].get("env", ENV)
     DISABLE_TEXT = config["DEFAULT"].getboolean("disable_text", DISABLE_TEXT)
     DISABLE_PHOTO = config["DEFAULT"].getboolean("disable_photo", DISABLE_PHOTO)
+    DISABLE_CAPTION = config["DEFAULT"].getboolean("disable_caption", DISABLE_CAPTION)
 
     # Email to telegram transfers
     TRANSFERS = []
@@ -48,6 +50,7 @@ def load_config(config_path):
         from_address = config[section].get("from_address")
         disable_text = config[section].getboolean("disable_text", DISABLE_TEXT)
         disable_photo = config[section].getboolean("disable_photo", DISABLE_PHOTO)
+        disable_caption = config[section].getboolean("disable_caption", DISABLE_CAPTION)
         caption_chat_id = config[section].get("caption_chat_id", None)
 
         TRANSFERS.append(
@@ -58,6 +61,7 @@ def load_config(config_path):
                 "name": section,
                 "disable_text": disable_text,
                 "disable_photo": disable_photo,
+                "disable_caption": disable_caption,
                 "caption_chat_id": caption_chat_id,
             }
         )
