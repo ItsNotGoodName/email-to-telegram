@@ -7,7 +7,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="email-to-telegram",
-    version="1.0.1",
+    version="1.0.2",
     description="Telegram bot that reads a mail file and forwards to Telegram chat",
     long_description=long_description,
     long_description_content_type="text/markdown",
