@@ -1,5 +1,3 @@
-### Example
-# https://github.com/pypa/sampleproject/blob/master/setup.py
 from setuptools import setup, find_packages
 import pathlib
 
@@ -10,7 +8,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 setup(
     name="email-to-telegram",
     version="1.0.1",
-    description="Forwards mail from mail file to Telegram chat.",
+    description="Telegram bot that reads a mail file and forwards to Telegram chat",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/ItsNotGoodName/email-to-telegram",
