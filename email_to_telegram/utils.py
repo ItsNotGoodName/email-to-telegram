@@ -34,12 +34,14 @@ def get_attachments_paths(email, attachment_folder):
         paths.append(attachment_folder / pathlib.Path(attachment["filename"]))
     return paths
 
+
 def clear_attachments(attachment_folder):
     try:
         for f in os.listdir(attachment_folder):
             os.remove(os.path.join(attachment_folder, f))
     except Exception as e:
         logging.error(e)
+
 
 def should_skip_address(email, transfer, address):
     if transfer[address + "_address"] is None:

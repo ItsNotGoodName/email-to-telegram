@@ -16,7 +16,12 @@ setup(
     author_email="gurnaindeol@gmail.com",
     packages=find_packages(exclude="test"),
     python_requires=">=3.6, <4",
-    install_requires=["python-telegram-bot>=13.5,<14.0", "watchdog>=2.1.1,<3.0.0", "mail-parser>=3.15.0,<4.0.0"],
+    install_requires=[
+        "python-telegram-bot>=13.5,<14.0",
+        "watchdog>=2.1.1,<3.0.0",
+        "mail-parser>=3.15.0,<4.0.0",
+    ],
+    extras_require={"test": ["tox", "pytest", "pytest-datadir", "pytest-lazy-fixture"]},
     entry_points={
         "console_scripts": [
             "email-to-telegram=email_to_telegram.__main__:main",
