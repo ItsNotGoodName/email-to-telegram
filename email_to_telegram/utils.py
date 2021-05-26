@@ -3,6 +3,7 @@ import logging
 import mailbox
 import pathlib
 import mailparser
+import imghdr
 
 
 def get_emails(mail_path):
@@ -29,9 +30,12 @@ def get_emails(mail_path):
 
 def get_attachments_paths(email, attachment_folder):
     email.write_attachments(attachment_folder)
+    ATTACHMENT_EXT = ["jpeg", "png"]
     paths = []
     for attachment in email.attachments:
-        paths.append(attachment_folder / pathlib.Path(attachment["filename"]))
+        filepath = attachment_folder / pathlib.Path(attachment["filename"])
+        if imghdr.what(filepath) in ATTACHMENT_EXT:
+            paths.append(filepath)
     return paths
 
 

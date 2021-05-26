@@ -15,6 +15,15 @@ def email_picture_fixture(shared_datadir):
 
 
 @pytest.fixture
+def email_invalid_picture_fixture(shared_datadir):
+    return {
+        "path": shared_datadir / "ip_camera_invalid_picture.email",
+        "email_index": 0,
+        "num_of_attachments": 0,
+    }
+
+
+@pytest.fixture
 def email_test_fixture(shared_datadir):
     return {
         "path": shared_datadir / "ip_camera_test.email",

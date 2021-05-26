@@ -40,6 +40,7 @@ def test_get_emails(fixture):
     "fixture",
     [
         lazy_fixture("email_picture_fixture"),
+        lazy_fixture("email_invalid_picture_fixture"),
         lazy_fixture("email_test_fixture"),
     ],
 )
